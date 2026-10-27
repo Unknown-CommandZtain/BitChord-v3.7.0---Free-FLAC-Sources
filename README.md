@@ -1,6 +1,6 @@
 # BitChord FLAC Aggregator 🎧
 
-**A FLAC-focused music-source aggregator for BitChord, built on Cloudflare Workers, with recording-aware recovery, optional Atmos, public music catalogs, a personal R2 library, and a permission-controlled 36-hour R2 cache. This is solely for Unknown_CommandZtain only and if you want to set up similarly like this, feel free to take a look on the below on how to create and deploy it on Cloudflare or any hosting website**
+**A FLAC-focused music-source aggregator for BitChord, built on Cloudflare Workers, with recording-aware recovery, optional Atmos, public music catalogs, a personal R2 library, and a permission-controlled 36-hour R2 cache. This is solely for Unknown_CommandZtain only and if you want to set up similarly like this, feel free to take a look on the below on how to create and deploy it on Cloudflare or any hosting website.**
 
 > **Latest prepared Worker:** `v3.7.9` · **FLAC Reliability Update**  
 > **Runtime:** JavaScript on Cloudflare Workers  
