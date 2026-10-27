@@ -1,6 +1,6 @@
 # BitChord FLAC Aggregator 🎧
 
-**A FLAC-focused music-source aggregator for BitChord, built on Cloudflare Workers, with recording-aware recovery, optional Atmos, public music catalogs, a personal R2 library, and a permission-controlled 36-hour R2 cache. This is solely for Unknown_CommandZtain only and if you want to set up similarly like this, feel free to take a look on the below on how to create and deploy it on Cloudflare or any hosting website.**
+**A FLAC-focused music-source aggregator for BitChord, built on Cloudflare Workers, with recording-aware recovery, optional Atmos, public music catalogs, a personal R2 library, and a permission-controlled 36-hour R2 cache. This is solely for Unknown_CommandZtain only and if you want to set up similarly like this, feel free to take a look on the below on how to create and deploy it on Cloudflare or any hosting website on your own.**
 
 > **Latest prepared Worker:** `v3.7.9` · **FLAC Reliability Update**  
 > **Runtime:** JavaScript on Cloudflare Workers  
@@ -63,7 +63,7 @@ BitChord FLAC Aggregator searches compatible music providers, selects FLAC candi
 | Feature | Description |
 | --- | --- |
 | FLAC-only default | Rejects known MP3, AAC, Opus, WebM, and other non-FLAC responses **through this Worker** in normal mode. |
-| Nine compatible addon positions | Preserves the original configured IDs `discord_0` through `discord_8` and existing track references. |
+| Nine compatible addon positions | Preserves the original configured IDs `example_0` through `example_8` and existing track references. |
 | Cross-provider rescue | Uses saved matching alternatives, then bounded fresh discovery, to recover the intended recording. |
 | Recording-aware matching | Uses title, artist, version/mix text, and available duration; distinguishes original mixes, edits, remixes, and other variants where possible. |
 | Japanese/Vocaloid support | Conservative Japanese/Romaji aliases, producer credits, and anime soundtrack search forms; not an exhaustive transliteration engine. |
@@ -79,7 +79,7 @@ BitChord FLAC Aggregator searches compatible music providers, selects FLAC candi
 
 There are **three distinct questions**, and the Worker answers only part of them:
 
-1. **Valid FLAC file/stream:** The first bytes are the actual FLAC signature `fLaC`. This rejects many incorrect codec claims, but does not by itself validate the entire file.
+1. **Valid FLAC file/stream:** The first bytes are the actual FLAC signature `fLaC`. It rejects many incorrect codec claims, but does not by itself validate the entire file.
 2. **Genuinely lossless source/master:** A file can be converted from AAC/Opus/MP3 to FLAC. The `fLaC` signature **cannot prove** that the original recording was never lossy. That requires provenance and, when available, trusted reference comparisons.
 3. **Playable by BitChord:** A confirmed FLAC header does not guarantee the final URL is still valid, reachable by the user's device, range-friendly, or supported by the player.
 
@@ -91,7 +91,7 @@ There are **three distinct questions**, and the Worker answers only part of them
 | `adaptive` | Accepts an inconclusive check when stream metadata claims FLAC; known non-FLAC bytes are still rejected. | **No**, cannot guarantee actual FLAC bytes |
 | `off` | Relies on format metadata without checking external-addon audio bytes. | **No** |
 
-> [!CAUTION]
+> [!REMINDER]
 > Use the **exact** text value `strict`. In the current v3.7.9 source, an **unrecognized** `FLAC_VERIFY_MODE` value unexpectedly falls back to `adaptive`. Avoid typos and verify this behavior is corrected before treating invalid configuration values as fail-closed. Do not misrepresent signature verification as proof of original-master provenance.
 
 ### Timing and recovery budgets
@@ -141,7 +141,7 @@ Hourly Cron Trigger: 0 * * * *
 
 | Source | Status in v3.7.9 | Notes |
 | --- | --- | --- |
-| Nine configured BitChord-compatible addons, `discord_0`–`discord_8` | **Included** | External providers may break, impose quotas, mislabel codec/quality, or require credentials and permission. **Provider order must not change.** |
+| Nine configured BitChord-compatible addons, `example_0`–`example_8` | **Included** | External providers may break, impose quotas, mislabel codec/quality, or require credentials and permission. **Provider order must not change.** |
 | Internet Archive (`ia`) | Included | Archive metadata and qualifying FLAC recordings. Rights and completeness vary by item. |
 | Jamendo (`jamendo`) | Optional | Requires your own `JAMENDO_CLIENT_ID`; API and recording licenses apply. |
 | Openverse (`openverse`) | Optional | Enable `OPENVERSE_ENABLED=true`; index metadata/license claims must be checked per work. |
@@ -150,7 +150,7 @@ Hourly Cron Trigger: 0 * * * *
 | Temporary 36-hour R2 cache (`cache`) | Optional | Separate signed-link cache with an explicit permission allowlist. |
 | Dolby Atmos | Optional **format mode**, not a provider | Requires `ATMOS_ENABLED=true` **and** a request with `atmos=auto`; only accepts matching E-AC-3 JOC metadata. |
 
-**Not added:** Funkwhale v2, Audius, ccMixter, Soulseek, FLACidal, Sidify, LastWave, Navidrome, and any direct new TIDAL/Qobuz commercial integration. Discussion, download testing, and API benchmarks are **not** production integration.
+**Not added:** Funkwhale v2, Audius, ccMixter, Soulseek, FLACidal, Sidify, LastWave, Navidrome, and any direct new TIDAL/Qobuz commercial integration after discussion, download testing, and API benchmarks, so they are **not** in production integration.
 
 The source file can contain URLs with embedded provider access tokens. **Do not publish the unredacted code or provider configuration.**
 
@@ -159,23 +159,23 @@ The source file can contain URLs with embedded provider access tokens. **Do not 
 ### Requirements
 
 - Cloudflare account with Workers access.
-- A **private copy of the v3.7.9 Worker** (`BitChord_v3.7.9.js` or matching TXT version).
-- The existing nine authorized provider URLs and their current indices.
+- A **private copy of the v3.7.9 Worker** for example (`BitChord_v3.7.9.js` or matching TXT version).
+- The existing authorized provider URLs and their current indices.
 - Optional R2 bindings and secrets for personal library/cache functions.
 - Optional permitted public catalog credentials and flags.
 
 ### Deploy safely
 
 1. **Back up the currently deployed Worker** before editing anything. The latest *prepared* release being v3.7.9 does not prove the live Worker is running it.
-2. Keep all provider entries in their existing order: `discord_0` through `discord_8`. Track IDs contain provider indices; reordering can break existing saved songs.
-3. Open **Cloudflare Dashboard → Workers & Pages → your Worker → Edit Code**. Replace the existing code with the **complete v3.7.9 source**, not the README or benchmark script.
+2. Keep all provider entries in their existing order: `example_0` through `example_8`. Track IDs contain provider indices; reordering can break existing saved songs.
+3. Open **Cloudflare Dashboard → Workers & Pages → your Worker → Edit Code**. Replace the existing code with the **complete v3.7.9 source** (this may differ from yours, please take a look on your project version) , not the README or benchmark script.
 4. Retain your environment variables, secrets, R2 bindings and Cron Trigger. Set `FLAC_VERIFY_MODE` **exactly** to `strict` (or leave it unset to use the default).
-5. Deploy, then open `https://YOUR-WORKER.workers.dev/manifest.json`. Check that it reports version `3.7.9`.
+5. Deploy, then open `https://YOUR-WORKER.workers.dev/manifest.json`. Check that it reports version `3.7.9` as example.
 6. Search in BitChord and test playback of a recording you have permission to access. Check Worker logs for resolution and `[PLAYBACK HANDOFF]`, then confirm real playback on the client.
 7. Test seeking, failed-provider fallback, and optional R2 cache behavior separately.
 
 > [!CAUTION]
-> The packaged Worker source includes original provider configuration that may contain **private or token-bearing URLs**. Keep the raw JavaScript, ZIP packages, and full Cloudflare logs private. A public GitHub README should never embed actual provider URLs, user addresses, API keys, signed audio links, or request identifiers. Rotate compromised keys as appropriate.
+> The packaged Worker source includes original provider configuration that may contain **private or token-bearing URLs**. Please keep the raw JavaScript, ZIP packages, and full Cloudflare logs private. A public GitHub README should never embed actual provider URLs, user addresses, API keys, signed audio links, or request identifiers if you want to post on public unless you set it to private just for yourself. Rotate compromised keys as appropriate.
 
 ### Deployment without R2
 
@@ -203,7 +203,7 @@ Set these under your Worker's **Settings → Variables and Secrets** or the corr
 
 ## 36-hour private FLAC cache: Cloudflare R2
 
-**`FLAC_CACHE_BUCKET` is temporary object storage, not a general public song database.** The signed Worker URL acts as a limited-time playback bearer link: anyone obtaining an unexpired link may be able to replay it.
+**`FLAC_CACHE_BUCKET` is used to stored temporary object storage, not a general public song database.** The signed Worker URL acts as a limited-time playback bearer link: anyone obtaining an unexpired link may be able to replay it.
 
 ### Create a distinct, non-public bucket
 
@@ -261,7 +261,7 @@ HEAD /audio/personal/{index}.flac
 
 **Critical privacy limitation:** The **bucket can be private while the Worker playback route remains public**. In v3.7.9, this route has **no per-user authentication or signed link requirement**. Anyone who discovers the route/index may retrieve the configured recording. Merely keeping its URL secret is not sufficient protection. `PERSONAL_FLAC_TRACKS` indices may also be discoverable through search results.
 
-For a genuinely private collection, **do not register sensitive/personal tracks in the publicly reachable Worker until appropriate authenticated route protection is implemented and tested**. The temporary cache signing mechanism is not automatically applied to the personal library route. If you only want private listening, keep this separate from any shared public addon.
+For a genuinely private collection, **I prefer to not register sensitive/personal tracks in the publicly reachable Worker until appropriate authenticated route protection is implemented and tested**. The temporary cache signing mechanism is not automatically applied to the personal library route. If you only want private listening, keep this separate from any shared public addon.
 
 A LastWave download being a valid FLAC does **not** establish that storing it or offering access is permitted. Personal use, public distribution, and selling access can have different legal/contractual requirements.
 
@@ -320,11 +320,9 @@ Open **Cloudflare Dashboard → Workers & Pages → your Worker → Observabilit
 | `[FLAC CACHE SAVED]` / `[FLAC CACHE SKIP]` | Background save succeeded or did not meet requirements. |
 | `[FLAC CACHE CLEANUP]` | Scheduled deletion/eviction. |
 
-### What the real logs already showed
+### Previous logs that we already fixed it
 
 An October 2026 trace showed an initial upstream **404**, a rescued FLAC candidate failing an initial one-second probe, and a later request **confirming FLAC bytes** from an alternate provider. That demonstrates why v3.7.8/3.7.9 distinguish inconclusive network conditions from confirmed non-FLAC. The later HTTP 200 confirms Worker handoff, **not** successful playback inside BitChord.
-
-Cloudflare request-event exports may still contain **IP addresses, geolocation, user agents, complete request paths, account data, and other identifiers**, even when application `console.log()` entries are privacy-conscious. Sanitize exports before sharing or publishing them.
 
 ### Troubleshooting
 
@@ -341,7 +339,7 @@ Cloudflare request-event exports may still contain **IP addresses, geolocation, 
 | Cache link returns 403 | Invalid/expired signature or changed signing key; request a fresh stream link. |
 | Cache returns 404 | Object expired, missing, or cache disabled; resolve again from a source. |
 | Cron cleanup absent | Check `0 * * * *` attached to the correct Worker and ensure `scheduled()` is deployed. |
-| Personal audio unexpectedly accessible | **Expected security weakness in v3.7.9**: `/audio/personal/{index}.flac` is not authenticated. Do not use it for private files until fixed. |
+| Personal audio unexpectedly accessible | **Expected security weakness in v3.7.9**: `/audio/personal/{index}.flac` is not authenticated. It will be fixed the moment v3.7.9. release and treated it as official. |
 | Opus plays despite Worker rules | BitChord may independently choose another addon or YouTube Music; Worker restrictions affect only this addon. |
 | Old song IDs no longer resolve | Confirm original nine provider IDs/positions were not changed. |
 | Public catalog returns no matches | Open catalogs have limited coverage and track-specific licenses; enabling them does not create mainstream FLAC releases. |
@@ -374,8 +372,6 @@ Cloudflare request-event exports may still contain **IP addresses, geolocation, 
 
 **Benchmark caveats:** Test results reflect particular endpoints, dates, network conditions, and small query samples. Metadata hints are not byte-level verification. The later trial made **no audio probes at all** because it identified no eligible public FLAC candidates. It cannot establish that a catalog has no FLAC files or that audio would play in BitChord.
 
-For personal **authorized downloads**, artist/label FLAC files from Bandcamp, BOOTH, or other licensed download stores may provide clearer source provenance, but a purchased file is not automatically licensed for redistribution.
-
 ### Proposed v3.9.0: Pathfinder (not built)
 
 The **Pathfinder** concept is a bounded, permission-aware fallback discovery layer:
@@ -400,7 +396,7 @@ Desired safeguards include strict timeouts, per-provider and daily budgets, a qu
 
 ### Future privacy work
 
-Before a private personal library can be treated as private, add real authentication/authorization to the `/audio/personal/` route, ensure user-specific access to matching search/stream endpoints, prevent public enumeration and token leakage, and validate range playback under authenticated requests. This is a **recommended future fix**, not currently shipped.
+Before a private personal library can be treated as private, real authentication/authorization will be added to the `/audio/personal/` route, ensure user-specific access to matching search/stream endpoints, prevent public enumeration and token leakage, and validate range playback under authenticated requests. This is a **recommended future fix**, not currently shipped.
 
 ## Costs, security, and rights
 
